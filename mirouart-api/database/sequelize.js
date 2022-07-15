@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const SimpleUserModel = require("../models/simple-user/SimpleUser")
 require("dotenv").config();
 
 // création d'une instance sequelize (paramètres de connexions)
@@ -27,7 +28,7 @@ dataBase
     })
   );
 
-
+const SimpleUser = SimpleUserModel(dataBase, DataTypes)
 // initialiser la bdd avec la création d'un administrateur
 const initDb = () => {
   return dataBase.sync({ force: true }).then(() => {
@@ -35,4 +36,4 @@ const initDb = () => {
   });
 };
 
-module.exports = { initDb};
+module.exports = { initDb, SimpleUser};
