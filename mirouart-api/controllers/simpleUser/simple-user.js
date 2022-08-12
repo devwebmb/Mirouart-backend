@@ -10,7 +10,7 @@ exports.signup = (req, res, next) => {
     SimpleUser.create({
       email: req.body.email,
       password: hash,
-      userName: req.body.userName,
+      username: req.body.username,
     })
       .then((simpleUser) => {
         const message = `L'utilisateur dont l'email est ${req.body.email} a bien été créé.`;

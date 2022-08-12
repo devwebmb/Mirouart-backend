@@ -12,7 +12,7 @@ module.exports = (sequelize, Datatypes) => {
     profilImgUrl: {
       type: Datatypes.STRING,
     },
-    userName: {
+    username: {
       type: Datatypes.STRING,
       allowNull: false,
       unique: true,
