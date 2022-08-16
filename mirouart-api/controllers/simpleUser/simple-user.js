@@ -14,7 +14,7 @@ exports.signup = (req, res, next) => {
     })
       .then((simpleUser) => {
         const message = `L'utilisateur dont l'email est ${req.body.email} a bien été créé.`;
-        res.status(201).json({ message, data: simpleUser });
+        res.status(201).json({ message, simpleUser });
       })
       .catch((error) => {
         const message =
@@ -42,12 +42,12 @@ exports.login = (req, res, next) => {
           return res.status(401).json({ message });
         }
         const message = "L'utilisateur' a été connecté avec succès";
-        return res.status(200).json({ message });
+        return res.status(200).json({ message, simpleUser });
       });
     })
     .catch((error) => {
       const message =
         "l'utilisateur n'a pas être connecté, réessayez dans un instant";
-      res.status(500).json({ message, data : error });
+      res.status(500).json({ message, data: error });
     });
 };
