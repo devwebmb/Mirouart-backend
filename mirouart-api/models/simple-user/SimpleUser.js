@@ -3,7 +3,9 @@ module.exports = (sequelize, Datatypes) => {
     email: {
       type: Datatypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: {
+        msg: "Cet adresse mail est déjà utilisée.", // Gère l'unicité de l'adresse mail dans la bdd
+      },
     },
     password: {
       type: Datatypes.STRING,
@@ -15,7 +17,9 @@ module.exports = (sequelize, Datatypes) => {
     username: {
       type: Datatypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: {
+        msg: "Ce nom d'utilisateur est déjà utilisé.", // Gère l'unicité de l'adresse mail dans la bdd
+      },
     },
   });
 };
