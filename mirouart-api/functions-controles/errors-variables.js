@@ -31,6 +31,11 @@ exports.emailNotFound = {
     "l'utilisateur n'existe pas, l'adresse email renseignée n'est pas présente dans la base de données.",
 };
 
+exports.announcementNotfound = {
+  code: "4041",
+  message: "L'annonce n'est pas présente dans la base de données"
+}
+
 //erreurs 500
 exports.internalServerError = {
   code: "5000",

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const sequelize = require("./database/sequelize");
 
 const simpleUserRoutes = require("./routes/simple-user");
+const annoucementsRoute = require("./routes/announcements.js");
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use((req, res, next) => {
 sequelize.initDb();
 
 app.use("/api/user", simpleUserRoutes);
+app.use("/api/announcement", annoucementsRoute);
 
 module.exports = app;

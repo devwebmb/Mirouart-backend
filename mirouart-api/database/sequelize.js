@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const SimpleUserModel = require("../models/simple-user/SimpleUser")
+const SimpleUserModel = require("../models/simple-user/SimpleUser");
+const AnnouncementModel = require("../models/announcements/Announcement");
+
 require("dotenv").config();
 
 // création d'une instance sequelize (paramètres de connexions)
@@ -28,7 +30,9 @@ dataBase
     })
   );
 
-const SimpleUser = SimpleUserModel(dataBase, DataTypes)
+const SimpleUser = SimpleUserModel(dataBase, DataTypes);
+const Announcement = AnnouncementModel(dataBase, DataTypes);
+
 // initialiser la bdd avec la création d'un administrateur
 const initDb = () => {
   return dataBase.sync({ force: true }).then(() => {
@@ -36,4 +40,4 @@ const initDb = () => {
   });
 };
 
-module.exports = { initDb, SimpleUser};
+module.exports = { initDb, SimpleUser, Announcement };

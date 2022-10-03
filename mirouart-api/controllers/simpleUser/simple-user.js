@@ -1,10 +1,11 @@
-const { SimpleUser } = require("../../database/sequelize");
+const { SimpleUser, Announcement } = require("../../database/sequelize");
 const bcrypt = require("bcrypt");
 const validator = require("email-validator");
 const responseBuilder = require("../../functions-controles/response-builders.js");
 const errorsMessage = require("../../functions-controles/errors-variables");
 const validMessages = require("../../functions-controles/valid-variables");
 const { ValidationError, UniqueConstraintError } = require("sequelize");
+const fs = require("fs");
 const jwt = require("jsonwebtoken");
 
 //inscription connexion
@@ -112,20 +113,20 @@ exports.login = (req, res, next) => {
               )
             );
         }
-                const token = jwt.sign(
-                  // création d'un token d'authentification
-                  { userId: simpleUser.id },
-                  `${process.env.PRIVATE_KEY}`,
-                  {
-                    expiresIn: "24h",
-                  }
-                );
+        const token = jwt.sign(
+          // création d'un token d'authentification
+          { userId: simpleUser.id },
+          `${process.env.PRIVATE_KEY}`,
+          {
+            expiresIn: "24h",
+          }
+        );
         return res
           .status(200)
           .json(
             responseBuilder.buildValidresponse(
               validMessages.connectSimpleUser.message,
-              {simpleUser, token}
+              { simpleUser, token }
             )
           );
       });
@@ -141,4 +142,145 @@ exports.login = (req, res, next) => {
           )
         );
     });
+};
+
+//update simpleUser
+
+exports.updateSimpleUser = (req, res, next) => {
+  const simpleUserId = parseInt(req.params.id);
+  const email = req.body.email;
+  const username = req.body.username;
+  SimpleUser.findOne({ where: { id: simpleUserId } }).then((simpleUser) => {
+    if (!simpleUser) {
+      return res
+        .status(404)
+        .json(
+          responseBuilder.buildErrorResponse(
+            errorsMessage.emailNotFound.code,
+            errorsMessage.emailNotFound.message
+          )
+        );
+    }
+    if (simpleUser.profilImgUrl) {
+      const filename = simpleUser.profilImgUrl.split("/images/profil")[1];
+      fs.unlink(`images/profil/${filename}`, () => {});
+    }
+    if (req.file) {
+      const file = `${req.file.filename}`;
+      SimpleUser.update(
+        {
+          email,
+          username,
+
+          profilImgUrl: `${req.protocol}://${req.get(
+            "host"
+          )}/images/profil/${file}`,
+        },
+        {
+          where: {
+            id: simpleUserId,
+          },
+        }
+      )
+        .then(() => {
+          SimpleUser.findOne({
+            where: { id: simpleUserId },
+          });
+        })
+        .then((profil) => {
+          return res
+            .status(200)
+            .json(
+              responseBuilder.buildValidresponse(
+                validMessages.updateSimpleUser.message,
+                profil
+              )
+            );
+        })
+        .catch((error) => {
+          return res
+            .status(500)
+            .json(
+              responseBuilder.buildErrorServerResponse(
+                errorsMessage.internalServerError.code,
+                errorsMessage.internalServerError.message,
+                error
+              )
+            );
+        });
+    } else {
+      SimpleUser.update(
+        {
+          email,
+          username,
+        },
+        { where: { id: simpleUserId } }
+      )
+        .then(() => {
+          SimpleUser.findOne({
+            where: { id: simpleUserId },
+          }).then((profil) => {
+            console.log(profil);
+            return res
+              .status(200)
+              .json(
+                responseBuilder.buildValidresponse(
+                  validMessages.updateSimpleUser.message,
+                  profil
+                )
+              );
+          });
+        })
+        .catch((error) => {
+          return res
+            .status(500)
+            .json(
+              responseBuilder.buildErrorServerResponse(
+                errorsMessage.internalServerError.code,
+                errorsMessage.internalServerError.message,
+                error
+              )
+            );
+        });
+    }
+  });
+};
+
+//deleteUser
+
+exports.deleteSimpleUser = (req, res, next) => {
+  const simpleUserId = parseInt(req.params.id);
+  SimpleUser.findOne({ where: { id: simpleUserId } }).then((simpleUser) => {
+    if (!simpleUser) {
+      return res
+        .status(404)
+        .json(
+          responseBuilder.buildErrorResponse(
+            errorsMessage.emailNotFound.message,
+            errorsMessage.emailNotFound.code
+          )
+        );
+    }
+    return simpleUser.destroy().then(() => {
+      return Announcement.destroy({ where: { posterId: simpleUserId } })
+        .then(() => {
+          res
+            .status(200)
+            .json(
+              responseBuilder.buildValidresponse(validMessages.deleteSimpleUser)
+            );
+        })
+        .catch((error) => {
+          return res
+            .status(500)
+            .json(
+              responseBuilder.buildErrorServerResponse(
+                errorsMessage.internalServerError.code,
+                errorsMessage.internalServerError.message,
+                error
+              )
+            );
+        });
+    });
+  });
 };
