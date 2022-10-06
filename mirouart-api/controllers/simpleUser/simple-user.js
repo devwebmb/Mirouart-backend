@@ -147,7 +147,8 @@ exports.login = (req, res, next) => {
 //update simpleUser
 
 exports.updateSimpleUser = (req, res, next) => {
-  const simpleUserId = parseInt(req.params.id);
+  console.log("test");
+  const simpleUserId =req.body.simpleUserId;
   const email = req.body.email;
   const username = req.body.username;
   SimpleUser.findOne({ where: { id: simpleUserId } }).then((simpleUser) => {
@@ -162,8 +163,8 @@ exports.updateSimpleUser = (req, res, next) => {
         );
     }
     if (simpleUser.profilImgUrl) {
-      const filename = simpleUser.profilImgUrl.split("/images/profil")[1];
-      fs.unlink(`images/profil/${filename}`, () => {});
+      const filename = simpleUser.profilImgUrl.split("mirouart-api/images/profils")[1];
+      fs.unlink(`mirouart-api/images/profils/${filename}`, () => {});
     }
     if (req.file) {
       const file = `${req.file.filename}`;
@@ -174,7 +175,7 @@ exports.updateSimpleUser = (req, res, next) => {
 
           profilImgUrl: `${req.protocol}://${req.get(
             "host"
-          )}/images/profil/${file}`,
+          )}mirouart-api/images/profils/${file}`,
         },
         {
           where: {

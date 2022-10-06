@@ -7,13 +7,12 @@ const MINE_TYPES = {
   "image/png": "png",
   "image/gif": "gif",
 };
-
 // Déclaration de storage qui permet de sauvegarder les images
 // en leur indiquant la destination, et en changeant le nom
 // de l'image ainsi que l'extension
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, "images/profil");
+    callback(null, "mirouart-api/images/profils");
   },
   filename: (req, file, callback) => {
     const name = file.fieldname.split(" ").join("_");
