@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 });
 sequelize.initDb();
 
-app.use("/images/profils", express.static(path.join(__dirname, "images/profils")));
+app.use("/mirouart-api/images/profils", express.static(path.join(__dirname, "images/profils")));
 
 app.use("/api/user", simpleUserRoutes);
 app.use("/api/announcement", annoucementsRoute);

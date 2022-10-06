@@ -147,7 +147,6 @@ exports.login = (req, res, next) => {
 //update simpleUser
 
 exports.updateSimpleUser = (req, res, next) => {
-  console.log("test");
   const simpleUserId =req.body.simpleUserId;
   const email = req.body.email;
   const username = req.body.username;
@@ -175,7 +174,7 @@ exports.updateSimpleUser = (req, res, next) => {
 
           profilImgUrl: `${req.protocol}://${req.get(
             "host"
-          )}mirouart-api/images/profils/${file}`,
+          )}/mirouart-api/images/profils/${file}`,
         },
         {
           where: {
@@ -186,17 +185,16 @@ exports.updateSimpleUser = (req, res, next) => {
         .then(() => {
           SimpleUser.findOne({
             where: { id: simpleUserId },
+          }).then((profil) => {
+            return res
+              .status(200)
+              .json(
+                responseBuilder.buildValidresponse(
+                  validMessages.updateSimpleUser.message,
+                  profil
+                )
+              );
           });
-        })
-        .then((profil) => {
-          return res
-            .status(200)
-            .json(
-              responseBuilder.buildValidresponse(
-                validMessages.updateSimpleUser.message,
-                profil
-              )
-            );
         })
         .catch((error) => {
           return res
@@ -221,7 +219,6 @@ exports.updateSimpleUser = (req, res, next) => {
           SimpleUser.findOne({
             where: { id: simpleUserId },
           }).then((profil) => {
-            console.log(profil);
             return res
               .status(200)
               .json(
