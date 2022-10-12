@@ -24,13 +24,19 @@ exports.addAnnouncement = (req, res, next) => {
       category: category,
       price: price,
       imgUrl1: file
-        ? `${req.protocol}://${req.get("host")}/images/${file}`
+        ? `${req.protocol}://${req.get(
+            "host"
+          )}/mirouart-api/images/announcements/${file}`
         : null,
       imgUrl2: file2
-        ? `${req.protocol}://${req.get("host")}/images/${file2}`
+        ? `${req.protocol}://${req.get(
+            "host"
+          )}/mirouart-api/images/announcements/${file2}`
         : null,
       imgUrl3: file3
-        ? `${req.protocol}://${req.get("host")}/images/${file3}`
+        ? `${req.protocol}://${req.get(
+            "host"
+          )}/mirouart-api/images/announcements/${file3}`
         : null,
     })
       .then((announcement) => {
