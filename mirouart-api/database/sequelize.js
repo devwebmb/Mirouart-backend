@@ -35,7 +35,7 @@ const Announcement = AnnouncementModel(dataBase, DataTypes);
 
 // initialiser la bdd avec la création d'un administrateur
 const initDb = () => {
-  return dataBase.sync({ force: true }).then(() => {
+  return dataBase.sync().then(() => {
     console.log("la base de données est initialisée.");
   });
 };
